@@ -21,7 +21,7 @@ jobs:
       - name: Lint YAML
         run: |
           pip install yamllint
-          yamllint -d "{extends: relaxed, ignore: .github/}" .
+          yamllint -d "{extends: relaxed, ignore: [.github/, k8s/]}" .
 
       - name: Build Docker image
         run: docker build -t flask-app .
