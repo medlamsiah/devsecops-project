@@ -7,41 +7,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Lint YAML
-      run: |
-        pip install yamllint
-        yamllint .
+      - name: Lint YAML
+        run: |
+          pip install yamllint
+          yamllint .
 
-    - name: Build Docker image
-      run: docker build -t flask-app .
+      - name: Build Docker image
+        run: docker build -t flask-app .
 
-    - name: Scan filesystem (Trivy)
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: fs
-        path: .
+      - name: Scan filesystem (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          path: .
 
-    - name: Scan Docker image
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: flask-app
+      - name: Scan Docker image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: flask-app
 
-    - name: Install Conftest
-      run: |
-        wget https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_linux_amd64.tar.gz
-        tar xzf conftest_linux_amd64.tar.gz
-        sudo mv conftest /usr/local/bin
+      - name: Install Conftest
+        run: |
+          wget https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_linux_amd64.tar.gz
+          tar xzf conftest_linux_amd64.tar.gz
+          sudo mv conftest /usr/local/bin
 
-    - name: Run Conftest
-      run: conftest test k8s/deployment.yaml --policy policy/
+      - name: Run Conftest
+        run: conftest test k8s/deployment.yaml --policy policy/
